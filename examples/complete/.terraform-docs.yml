@@ -3,7 +3,7 @@ version: '>= 0.14.0'
 formatter: markdown table
 
 content: |-
-  # Scaffolding Example
+  # Terraform ACI Tenant SPAN Source Group Module Example
 
   To run this example you need to execute:
 
