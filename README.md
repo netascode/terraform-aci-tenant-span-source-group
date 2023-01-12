@@ -11,9 +11,9 @@ Location in GUI:
 ## Examples
 
 ```hcl
-module "aci-tenant-span-source-group" {
+module "aci_tenant_span_source_group" {
   source  = "netascode/tenant-span-source-group/aci"
-  version = "0.0.1"
+  version = ">= 0.1.0"
 
   name        = "SPAN1"
   tenant      = "ABC"
@@ -28,8 +28,7 @@ module "aci-tenant-span-source-group" {
       application_profile = "AP1"
     }
   ]
-  destination_name        = "DESTINATION1"
-  destination_description = "My Destination"
+  destination = "DESTINATION1"
 }
 ```
 
@@ -50,13 +49,12 @@ module "aci-tenant-span-source-group" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_tenant"></a> [tenant](#input\_tenant) | Tenant name. | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | SPAN source group name. | `string` | n/a | yes |
-| <a name="input_tenant"></a> [tenant](#input\_tenant) | SPAN source group tenant name. | `string` | n/a | yes |
 | <a name="input_description"></a> [description](#input\_description) | SPAN source group description. | `string` | `""` | no |
 | <a name="input_admin_state"></a> [admin\_state](#input\_admin\_state) | SPAN source group administrative state. | `bool` | `true` | no |
-| <a name="input_sources"></a> [sources](#input\_sources) | List of SPAN sources. Choices `direction`: `in`, `both`, `out`. Default value `direction`: `both`. | <pre>list(object({<br>    description         = optional(string, "")<br>    name                = string<br>    direction           = optional(string, "both")<br>    application_profile = optional(string)<br>    endpoint_group      = optional(string)<br>  }))</pre> | `[]` | no |
-| <a name="input_destination_name"></a> [destination\_name](#input\_destination\_name) | SPAN source destination group name. | `string` | n/a | yes |
-| <a name="input_destination_description"></a> [destination\_description](#input\_destination\_description) | SPAN source destination group description. | `string` | `""` | no |
+| <a name="input_destination"></a> [destination](#input\_destination) | SPAN source destination group name. | `string` | n/a | yes |
+| <a name="input_sources"></a> [sources](#input\_sources) | List of SPAN sources. Choices `direction`: `in`, `both`, `out`. Default value `direction`: `both`. | <pre>list(object({<br>    name                = string<br>    description         = optional(string, "")<br>    direction           = optional(string, "both")<br>    application_profile = optional(string)<br>    endpoint_group      = optional(string)<br>  }))</pre> | `[]` | no |
 
 ## Outputs
 

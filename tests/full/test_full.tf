@@ -11,10 +11,16 @@ terraform {
   }
 }
 
+resource "aci_rest_managed" "fvTenant" {
+  dn         = "uni/tn-TF"
+  class_name = "fvTenant"
+}
+
 module "main" {
-  source      = "../.."
+  source = "../.."
+
+  tenant      = aci_rest_managed.fvTenant.content.name
   name        = "TEST_FULL"
-  tenant      = "ABC"
   description = "My Test Tenant Span Source Group"
   admin_state = false
   sources = [
@@ -30,13 +36,11 @@ module "main" {
       name = "SRC2"
     }
   ]
-  destination_name        = "TEST_DST"
-  destination_description = "My Destination"
-
+  destination = "TEST_DST"
 }
 
 data "aci_rest_managed" "spanSrcGrp" {
-  dn         = "uni/tn-ABC/srcgrp-TEST_FULL"
+  dn         = "uni/tn-TF/srcgrp-TEST_FULL"
   depends_on = [module.main]
 }
 
@@ -103,7 +107,7 @@ resource "test_assertions" "spanRsSrcToEpg" {
   equal "tDn" {
     description = "tDn"
     got         = data.aci_rest_managed.spanRsSrcToEpg.content.tDn
-    want        = "uni/tn-ABC/ap-AP1/epg-EPG1"
+    want        = "uni/tn-TF/ap-AP1/epg-EPG1"
   }
 }
 
@@ -142,21 +146,9 @@ data "aci_rest_managed" "spanSpanLbl" {
 resource "test_assertions" "spanSpanLbl" {
   component = "spanSpanLbl"
 
-  equal "descr" {
-    description = "descr"
-    got         = data.aci_rest_managed.spanSpanLbl.content.descr
-    want        = "My Destination"
-  }
-
   equal "name" {
     description = "name"
     got         = data.aci_rest_managed.spanSpanLbl.content.name
     want        = "TEST_DST"
-  }
-
-  equal "tag" {
-    description = "tag"
-    got         = data.aci_rest_managed.spanSpanLbl.content.tag
-    want        = "yellow-green"
   }
 }

@@ -13,15 +13,21 @@ terraform {
   }
 }
 
+resource "aci_rest_managed" "fvTenant" {
+  dn         = "uni/tn-TF"
+  class_name = "fvTenant"
+}
+
 module "main" {
-  source           = "../.."
-  name             = "TEST_MIN"
-  destination_name = "TEST_DST"
-  tenant           = "ABC"
+  source = "../.."
+
+  tenant      = aci_rest_managed.fvTenant.content.name
+  name        = "TEST_MIN"
+  destination = "TEST_DST"
 }
 
 data "aci_rest_managed" "spanSrcGrp" {
-  dn         = "uni/tn-ABC/srcgrp-TEST_MIN"
+  dn         = "uni/tn-TF/srcgrp-TEST_MIN"
   depends_on = [module.main]
 }
 
@@ -56,21 +62,9 @@ data "aci_rest_managed" "spanSpanLbl" {
 resource "test_assertions" "spanSpanLbl" {
   component = "spanSpanLbl"
 
-  equal "descr" {
-    description = "descr"
-    got         = data.aci_rest_managed.spanSpanLbl.content.descr
-    want        = ""
-  }
-
   equal "name" {
     description = "name"
     got         = data.aci_rest_managed.spanSpanLbl.content.name
     want        = "TEST_DST"
-  }
-
-  equal "tag" {
-    description = "tag"
-    got         = data.aci_rest_managed.spanSpanLbl.content.tag
-    want        = "yellow-green"
   }
 }

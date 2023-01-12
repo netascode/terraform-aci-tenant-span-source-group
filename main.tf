@@ -1,20 +1,18 @@
 resource "aci_rest_managed" "spanSrcGrp" {
-  dn         = "uni/tn-${var.tenant}/srcgr-${var.name}"
+  dn         = "uni/tn-${var.tenant}/srcgrp-${var.name}"
   class_name = "spanSrcGrp"
   content = {
     name    = var.name
     descr   = var.description
-    adminSt = var.admin_state
+    adminSt = var.admin_state == true ? "enabled" : "disabled"
   }
 }
 
 resource "aci_rest_managed" "spanSpanLbl" {
-  dn         = "${aci_rest_managed.spanSrcGrp.dn}/spanlbl-${var.destination_name}"
+  dn         = "${aci_rest_managed.spanSrcGrp.dn}/spanlbl-${var.destination}"
   class_name = "spanSpanLbl"
   content = {
-    descr = var.destination_description
-    name  = var.destination_name
-    tag   = "yellow-green"
+    name = var.destination
   }
 }
 
